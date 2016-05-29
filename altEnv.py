@@ -9,8 +9,28 @@ import subprocess
 import re
 import configparser
 
-config = configparser.ConfigParser()
-config.read("config.ini")
+CONFIG_FILE = "config.ini"
+
+def initConfig():
+    global config
+    config = configparser.ConfigParser()
+    config.add_section('global')
+    
+    """
+    environment-path = /path/to/environment
+    qemu-path = /home/blerg
+    qemu-img = /path/to/qemu-img
+    """
+
+
+def readConfig():
+    global config
+    config = configparser.ConfigParser()
+    out = config.read(CONFIG_FILE)
+
+    # If there's no config.ini file, make one
+    if out == []:
+        initConfig()
 
 def mainMenu():
     menu.items = []
