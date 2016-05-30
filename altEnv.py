@@ -8,19 +8,41 @@ import shutil
 import subprocess
 import re
 import configparser
+import os.path
+
 
 CONFIG_FILE = "config.ini"
+
+
+def writeConfig():
+    global config
+    
+    with open(os.path.join(config['global']['base_path'],CONFIG_FILE),"w") as f:
+        config.write(f)
+
+
+def updateConfig():
+    global config
+    
+    base_path = input("Base Path [{0}]: ".format(config['global']['base_path']))
+    
+    if base_path != "":
+        config['global']['base_path'] = base_path
+    
+    writeConfig()
+
 
 def initConfig():
     global config
     config = configparser.ConfigParser()
     config.add_section('global')
+
+    config['global']['base_path'] = os.path.dirname(os.path.abspath(__file__))
+    config['global']['qemu_path'] = ""
+    config['global']['qemu-img'] = ""   
+    config['global']['qemu-system-mips'] = ""
     
-    """
-    environment-path = /path/to/environment
-    qemu-path = /home/blerg
-    qemu-img = /path/to/qemu-img
-    """
+    writeConfig()    
 
 
 def readConfig():
@@ -77,6 +99,7 @@ def getStatus():
     
     return t
 
+readConfig()
 
 menu = CursesMenu("altEnvs v0.1", "")
 
