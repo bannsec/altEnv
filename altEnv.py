@@ -38,7 +38,7 @@ def initConfig():
     config.add_section('global')
 
     config['global']['base_path'] = os.path.dirname(os.path.abspath(__file__))
-    config['global']['qemu_path'] = ""
+    #config['global']['qemu_path'] = ""
     config['global']['qemu-img'] = ""   
     config['global']['qemu-system-mips'] = ""
     
@@ -58,10 +58,12 @@ def mainMenu():
     menu.items = []
     menu.subtitle = "Main Menu"
     status = FunctionItem("Status",lambda: print(getStatus()) or input())
+    update_config = FunctionItem("Update Config",updateConfig)
     install_qemu = MenuItem("Install QEMU")
     run = MenuItem("Run Environment")
 
     menu.append_item(status)
+    menu.append_item(update_config)
     menu.append_item(install_qemu)
     menu.append_item(run)
 
