@@ -9,10 +9,48 @@ import subprocess
 import re
 import configparser
 import os.path
-
+import os
+import urllib.request
+import sys
 
 CONFIG_FILE = "config.ini"
 
+def installQEMU():
+    global config
+    
+    qemu_version = "qemu-2.6.0"
+
+    sys.stdout.write("Downloading QEMU ... ")
+    sys.stdout.flush()
+    urllib.request.urlretrieve("http://wiki.qemu-project.org/download/{0}.tar.bz2".format(qemu_version),os.path.join(config['global']['base_path'],"{0}.tar.bz2".format(qemu_version)))
+    sys.stdout.write(green("[ Completed ]\n"))
+    
+    sys.stdout.write("Extracting QEMU ... ")
+    sys.stdout.flush()
+    
+    with tarfile.open("{0}.tar.bz2".format(qemu_version)) as tar:
+        tar.extractall()
+
+    sys.stdout.writeln(green("[ Completed ]"))
+    
+    sys.stdout.write("Compiling QEMU (be patient!) ... ")
+    sys.stdout.flush()
+
+    # Make build directory
+    os.makedirs(os.path.join(config['global']['base_path'],qemu_version,"build"),exist_ok=True)
+    
+    # Configure
+    subprocess.check_output("../configure",shell=True,cwd=os.path.join(config['global']['base_path'],qemu_version,"build"))
+    
+    # Run the make
+    subprocess.check_output("make",shell=True,cwd=os.path.join(config['global']['base_path'],qemu_version,"build"))
+    
+    # Update the config
+    config['global']['qemu-img'] = os.path.join(config['global']['base_path'],qemu_version,"build","qemu-img")
+    config['global']['qemu-system-mips'] = os.path.join(config['global']['base_path'],qemu_version,"build","mips-softmmu","qemu-system-mips")
+    
+    
+    input("Press Any Key To Continue")
 
 def writeConfig():
     global config
@@ -59,7 +97,7 @@ def mainMenu():
     menu.subtitle = "Main Menu"
     status = FunctionItem("Status",lambda: print(getStatus()) or input())
     update_config = FunctionItem("Update Config",updateConfig)
-    install_qemu = MenuItem("Install QEMU")
+    install_qemu = FunctionItem("Install QEMU",installQEMU)
     run = MenuItem("Run Environment")
 
     menu.append_item(status)
