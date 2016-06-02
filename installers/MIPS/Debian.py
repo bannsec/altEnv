@@ -79,7 +79,7 @@ def setup(_):
         vm_config.write(f)
 
     sys.stdout.write(green("[ Completed ]\n"))
-    return    
+
     print("Starting setup ... ") 
     
     # Run system to initiate setup
