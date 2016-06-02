@@ -29,7 +29,7 @@ def getVMVariables():
     smp = input("Number of CPU Cores [{0}]: ".format(multiprocessing.cpu_count()))
     smp = int(smp) if smp is not "" else multiprocessing.cpu_count()
 
-    memory = input("Memory [1G]: ")
+    memory = input("Memory [1G/1024M]: ")
     memory = memory if memory is not "" else "1G"
 
     return env_name, full_env_path, hd_size, smp, memory
@@ -54,6 +54,7 @@ def getTools():
     tools = {}
     tools['qemu-img'] = config['global']['qemu-img'] if config['global']['qemu-img'] is not "" else shutil.which("qemu-img")
     tools['qemu-system-mips'] = config['global']['qemu-system-mips'] if config['global']['qemu-system-mips'] is not "" else shutil.which("qemu-system-mips")
+    tools['qemu-system-mips64'] = config['global']['qemu-system-mips64'] if config['global']['qemu-system-mips64'] is not "" else shutil.which("qemu-system-mips64")
 
     return tools
 
@@ -93,6 +94,7 @@ def initConfig():
     #config['global']['qemu_path'] = ""
     config['global']['qemu-img'] = ""
     config['global']['qemu-system-mips'] = ""
+    config['global']['qemu-system-mips64'] = ""
 
     writeConfig()
 

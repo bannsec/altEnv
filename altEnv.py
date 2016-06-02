@@ -17,13 +17,22 @@ from glob import glob
 import importlib
 from helpers import *
 
-#CONFIG_FILE = "config.ini"
-
 def installQEMU(_):
     global config
+
+    base_url = "http://wiki.qemu-project.org/download/"
+
+    # Read the directory
+    with urllib.request.urlopen(base_url) as f:
+        html = f.read()
+
+    versions = natsort.humansorted([x.decode('ascii') for x in list(set(re.findall(b">qemu-([0-9-\.]+?)\.tar\.bz2",html)))])
     
+    # Assuming we want the latest version
+    qemu_version = versions[-1]
+
     # TODO: Dynamically determine latest qemu version
-    qemu_version = "qemu-2.6.0"
+    #qemu_version = "qemu-2.6.0"
     
     sys.stdout.write("Downloading QEMU ... ")
     sys.stdout.flush()
@@ -57,6 +66,7 @@ def installQEMU(_):
     # Update the config
     config['global']['qemu-img'] = os.path.join(config['global']['base_path'],qemu_version,"build","qemu-img")
     config['global']['qemu-system-mips'] = os.path.join(config['global']['base_path'],qemu_version,"build","mips-softmmu","qemu-system-mips")
+    config['global']['qemu-system-mips64'] = os.path.join(config['global']['base_path'],qemu_version,"build"," mips64-softmmu","qemu-system-mips64")
     
     sys.stdout.write(green("[ Completed ]\n"))
 
