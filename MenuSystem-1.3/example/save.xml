@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<menu data="False" prompt="What do you want to do? " title="Information Editor">
+	<choice description="Edit Name" handler="save_name" selector="1" value="1">
+		<menu data="True" prompt="Enter your name. &gt; " title="Name Editor"/>
+	</choice>
+	<choice description="Edit Address" handler="None" selector="2" value="2">
+		<menu data="False" prompt="What do you want to do? " title="Address Editor">
+			<choice description="Edit Street Address" handler="save_street" selector="1" value="1"/>
+			<choice description="Edit City" handler="save_city" selector="2" value="2"/>
+			<choice description="Edit State" handler="save_state" selector="3" value="3"/>
+			<choice description="Edit Zip Code" handler="save_zip" selector="4" value="4"/>
+			<choice description="Return to Main Menu" handler="done" selector="0" value="0"/>
+		</menu>
+	</choice>
+	<choice description="Edit Phone Number" handler="save_phone" selector="3" value="3">
+		<menu data="True" prompt="Enter your phone number. &gt; " title="Phone Number Editor"/>
+	</choice>
+	<choice description="Exit" handler="done" selector="0" value="0"/>
+</menu>

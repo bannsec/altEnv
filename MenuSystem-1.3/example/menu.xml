@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<menu data="False" prompt="&gt;" title="Main Menu">
+	<!--Bar menu, goes up one level each time you select cancel.-->
+	<!--The submenu equiped choices in the bar menu stack have no handlers.-->
+	<choice description="Bar Top Menu" handler="None" selector="0" value="None">
+		<menu data="False" prompt="&gt;" title="Bar Top Menu">
+			<!--Maybe some choices here. Another list of related choices below, in a submenu.-->
+			<choice description="Bar Middle Menu" handler="None" selector="0" value="None">
+				<menu data="False" prompt="&gt;" title="Bar Middle Menu">	
+					<!--Maybe some more choices, then another submenu.-->
+					<choice description="Bar Bottom Menu" handler="None" selector="0" value="None">
+						<menu data="False" prompt="&gt;" title="Bar Bottom Menu">
+							<choice description="Foo" handler="foo" selector="0" value="None"/>	
+							<choice description="Cancel" handler="up_level" selector="1" value="None"/>
+						</menu>
+					</choice>
+					<choice description="Cancel" handler="up_level" selector="1" value="None"/>
+				</menu>
+			</choice>
+			<choice description="Cancel" handler="up_level" selector="1" value="None"/>
+		</menu>
+	</choice>
+	<!--Baz menu, goes all the way back to the main menu after you select an option.-->
+	<!--No handler for this submenu equiped choice either.-->
+	<choice description="Baz Top Menu" handler="None" selector="1" value="None">
+		<menu data="False" prompt="&gt;" title="Baz Top Menu">
+			<!--Maybe some choices here. Another list of related choices below, in a submenu.-->
+			<!--This submenu equiped choice has a handler. It serves to boost execution up one level when the menu finishes.-->
+			<choice description="Baz Middle Menu" handler="up_level" selector="0" value="None">
+				<menu data="False" prompt="&gt;" title="Baz Middle Menu">	
+					<!--Maybe some more choices, then another submenu.-->
+					<!--This one has a handler too. It will boost execution up, and then it will get boosted again, ending up back at the main menu.-->
+					<choice description="Baz Bottom Menu" handler="up_level" selector="0" value="None">
+						<menu data="False" prompt="&gt;" title="Baz Bottom Menu">
+							<choice description="Foo" handler="foo" selector="0" value="None"/>	
+							<choice description="Cancel" handler="up_level" selector="1" value="None"/>
+						</menu>
+					</choice>
+					<choice description="Cancel" handler="up_level" selector="1" value="None"/>
+				</menu>
+			</choice>
+			<choice description="Cancel" handler="up_level" selector="1" value="None"/>
+		</menu>
+	</choice>
+	<choice description="Quit" handler="up_level" selector="2" value="None"/>
+    <!-- Menu with a non-integer selector -->
+    <choice description="Nothing" handler="None" selector="Y" value="Y" />
+</menu>
