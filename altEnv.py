@@ -14,7 +14,7 @@ import sys
 import tarfile
 import multiprocessing
 from glob import glob
-
+import importlib
 
 CONFIG_FILE = "config.ini"
 
@@ -120,8 +120,11 @@ def selectOS(arch):
     # Dynamically populate what architectures we have (<installers>/*)
     for host_os in glob(os.path.join(config['global']['base_path'],"installers",arch,"*")):
         host_os = os.path.splitext(os.path.basename(host_os))[0]
+        if host_os == "__pycache__":
+            continue
+
         # TODO: Maybe import here?
-        os_items.append(menusystem.Choice(selector=index, value=index, handler=None, description=host_os))
+        os_items.append(menusystem.Choice(selector=index, value=index, handler=importlib.import_module("installers.{0}.{1}".format(arch,host_os)).setup, description=host_os))
         index += 1
     
     #items = []
@@ -140,6 +143,9 @@ def selectArch():
     # Dynamically populate what architectures we have (<installers>/*)
     for arch in glob(os.path.join(config['global']['base_path'],"installers","*")):
         arch = os.path.basename(arch)
+        if arch == "__pycache__":
+            continue
+
         # Recursively populate the menu
         arch_items.append(menusystem.Choice(selector=index, value=index, handler=None, description=arch, subMenu=selectOS(arch)))
         index += 1
