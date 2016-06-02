@@ -12,12 +12,12 @@ from tcolors import *
 import configparser
 import multiprocessing
 
-NAME = "Debian MIPS"
-DESCRIPTION = "Installer for Debian running on an emulated MIPS Processor"
+NAME = "Debian MIPSEL"
+DESCRIPTION = "Installer for Debian running on an emulated MIPSEL (little endian) Processor"
 
 
 def setup(_):
-    """Walk the user through setting up a Debian MIPS environment
+    """Walk the user through setting up a Debian MIPSEL environment
     
      Parameters
      ----------
@@ -27,10 +27,11 @@ def setup(_):
     print()
 
     x = ""
+
     while x not in ['stable','testing',"unstable"]:
         x = input("Which distro? Stable/Testing/Unstable? ").lower()    
 
-    base_url = "http://ftp.de.debian.org/debian/dists/{0}/main/installer-mips/current/images/malta/netboot/".format(x)
+    base_url = "http://ftp.de.debian.org/debian/dists/{0}/main/installer-mipsel/current/images/malta/netboot/".format(x)
 
     config = readConfig()
     tools = getTools()
@@ -72,7 +73,7 @@ def setup(_):
     vm_config = configparser.ConfigParser()
     vm_config.optionxform = str 
     vm_config.add_section('global')
-    vm_config['global']['tool'] = "qemu-system-mips64"
+    vm_config['global']['tool'] = "qemu-system-mips64el"
     vm_config.add_section('options')
     vm_config['options']['M'] = "malta"
     vm_config['options']['append'] = "'root=/dev/sda1 console=ttyS0'"
@@ -92,7 +93,7 @@ def setup(_):
     # Removing SMP for now as it isn't running correctly with that option
     # Also removing memory options. Both seem to either break or have no effect
     os.system("{0} -M malta -kernel {1} -initrd {2} -hda {3} -append \"root=/dev/ram console=ttyS0\" -nographic".format(
-        tools['qemu-system-mips64'],
+        tools['qemu-system-mips64el'],
         os.path.join(full_env_path,vmlinux),
         os.path.join(full_env_path,"initrd.gz"),
         os.path.join(full_env_path,"hda.img"),

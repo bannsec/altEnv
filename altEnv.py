@@ -16,6 +16,7 @@ import multiprocessing
 from glob import glob
 import importlib
 from helpers import *
+from natsort import natsort
 
 def installQEMU(_):
     global config
@@ -67,6 +68,7 @@ def installQEMU(_):
     config['global']['qemu-img'] = os.path.join(config['global']['base_path'],qemu_version,"build","qemu-img")
     config['global']['qemu-system-mips'] = os.path.join(config['global']['base_path'],qemu_version,"build","mips-softmmu","qemu-system-mips")
     config['global']['qemu-system-mips64'] = os.path.join(config['global']['base_path'],qemu_version,"build"," mips64-softmmu","qemu-system-mips64")
+    config['global']['qemu-system-mips64el'] = os.path.join(config['global']['base_path'],qemu_version,"build"," mips64el-softmmu","qemu-system-mips64el")
     
     sys.stdout.write(green("[ Completed ]\n"))
 
