@@ -3,12 +3,15 @@
 import sys
 import lzma
 import subprocess
+from helpers import *
+import re
+import urllib
 
 NAME = "Debian MIPS"
 DESCRIPTION = "Installer for Debian running on an emulated MIPS Processor"
 
 
-def setup(config):
+def setup(_):
     """Walk the user through setting up a Debian MIPS environment
     
      Parameters
@@ -16,6 +19,19 @@ def setup(config):
      config : dict
         Dictionary object containing parsed config values
     """
+    readConfig()
+    tools = getTools()
+    #print(type(tools))
+
+    with urllib.request.urlopen("http://ftp.de.debian.org/debian/dists/stable/main/installer-mips/current/images/malta/netboot/") as u:
+        html = u.read()
+
+
+    # Figure out the versions
+    vmlinux = re.search(b"<a href=\"(vmlinux.*?)\">",html).group(1).decode('ascii')
+    
+    print("\nDownloading {0}".format(vmlinux))
+
 
     # Download the needed config files
     # http://ftp.de.debian.org/debian/dists/stable/main/installer-mips/current/images/malta/netboot/

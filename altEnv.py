@@ -15,8 +15,9 @@ import tarfile
 import multiprocessing
 from glob import glob
 import importlib
+from helpers import *
 
-CONFIG_FILE = "config.ini"
+#CONFIG_FILE = "config.ini"
 
 def installQEMU(_):
     global config
@@ -65,6 +66,7 @@ def installQEMU(_):
     
     input("Press Any Key To Continue")
 
+"""
 def writeConfig():
     global config
     
@@ -109,6 +111,8 @@ def readConfig():
     if out == []:
         initConfig()
 
+"""
+
 def selectOS(arch):
     """
     Given arch (i.e.: MIPS), return menu for selecting valid Operating Systems
@@ -124,7 +128,7 @@ def selectOS(arch):
             continue
 
         # TODO: Maybe import here?
-        os_items.append(menusystem.Choice(selector=index, value=index, handler=importlib.import_module("installers.{0}.{1}".format(arch,host_os)).setup, description=host_os))
+        os_items.append(menusystem.Choice(selector=index, value=getTools(), handler=importlib.import_module("installers.{0}.{1}".format(arch,host_os)).setup, description=host_os))
         index += 1
     
     #items = []
@@ -223,17 +227,19 @@ def hasQEMU():
     
     return True if qemu != None else False
 
+"""
 def getTools():
-    """
+   
     Returns a dictionary of tool paths. Prioritize tools that we explicitly set.
-    """
+   
 
     tools = {}
     tools['qemu-img'] = config['global']['qemu-img'] if config['global']['qemu-img'] is not "" else shutil.which("qemu-img")
     tools['qemu-system-mips'] = config['global']['qemu-system-mips'] if config['global']['qemu-system-mips'] is not "" else shutil.which("qemu-system-mips")
     
     return tools
-    
+"""
+ 
 
 def getStatus():
     """
@@ -261,7 +267,9 @@ def getStatus():
     
     return t
 
-readConfig()
+global config
+
+config = readConfig()
 
 #menu = CursesMenu("altEnvs v0.1", "")
 
