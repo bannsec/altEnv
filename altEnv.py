@@ -62,8 +62,12 @@ def installQEMU():
 def writeConfig():
     global config
     
-    with open(os.path.join(config['global']['base_path'],CONFIG_FILE),"w") as f:
+    #with open(os.path.join(config['global']['base_path'],CONFIG_FILE),"w") as f:
+    with open(CONFIG_FILE,"w") as f:
         config.write(f)
+
+    # Create needed output dirs
+    os.makedirs(os.path.join(config['global']['base_path'],"environments"),exist_ok=True)
 
 
 def updateConfig():
