@@ -121,6 +121,81 @@ def selectArch():
     
     return menu
 
+
+def runEnv(env):
+    """
+    Run the given environment
+    """
+    
+    # First, create variables
+    full_env_path = os.path.join(config['global']['base_path'],'environments',env)
+    config_path = os.path.join(full_env_path,"config.ini")
+    disk_path = os.path.join(full_env_path,"hda.img")
+    
+    # Figure out what tools to use
+    tools = getTools()
+
+    # Load the config
+    env_config = configparser.ConfigParser()
+    env_config.optionxform = str
+    env_config.read(config_path)
+    
+    # Generate option strings
+    options = ""
+    for var in env_config['options']:
+        # Need to put full path to kernel when we need to use it
+        if var == "kernel":
+            options += " -kernel {0} ".format(os.path.join(full_env_path,env_config['options'][var]))
+        else:
+            options += " -{0} {1} ".format(var,env_config['options'][var])
+    
+    # Tack on the hda
+    options += "-hda {0} ".format(os.path.join(full_env_path,"hda.img"))
+
+    command = "{0} {1}".format(tools[env_config['global']['tool']],options)
+
+    #print("Running command: {0}".format(command))
+    os.system(command)
+
+
+def selectVMSubMenu(env):
+    
+    options = []
+
+    options.append(menusystem.Choice(selector=1, value=env, handler=runEnv, description='Run Environment'))
+    options.append(menusystem.Choice(selector=0, value=0, handler=lambda _: False, description='Back'))
+
+    
+    menu = menusystem.MenuSystem.Menu(title='{0} Options'.format(env), choice_list=options, prompt='Select Choice.> ') 
+    
+    return menu
+
+
+def selectVM():
+    """
+    Setup Menu for selecting a VM to run
+    """
+    
+    vms = []
+    
+    index = 1
+
+    # Dynamically populate what architectures we have (<installers>/*)
+    for env in glob(os.path.join(config['global']['base_path'],"environments","*")):
+        env = os.path.basename(env)
+        if env == "__pycache__":
+            continue
+
+        # Recursively populate the menu
+        vms.append(menusystem.Choice(selector=index, value=index, handler=None, description=env, subMenu=selectVMSubMenu(env)))
+        index += 1
+    
+    vms.append(menusystem.Choice(selector=0, value=0, handler=lambda _: False, description='Back'))
+
+    menu = menusystem.MenuSystem.Menu(title='Environments', choice_list=vms, prompt='Select Choice.> ') 
+    
+    return menu
+
 def mainMenu():
 
     arch_items = []
@@ -130,7 +205,7 @@ def mainMenu():
     items.append(menusystem.Choice(selector=1, value=1, handler=lambda _: print() or print(getStatus()), description='Check status of altEnv'))
     items.append(menusystem.Choice(selector=2, value=2, handler=updateConfig, description='Update altEnv Config'))
     items.append(menusystem.Choice(selector=3, value=3, handler=installQEMU, description='Install QEMU'))
-    items.append(menusystem.Choice(selector=4, value=4, handler=None, description='Run Environment'))
+    items.append(menusystem.Choice(selector=4, value=4, handler=None, description='Run Environment',subMenu=selectVM()))
     items.append(menusystem.Choice(selector=5, value=5, handler=None, description='Create Environment',subMenu=selectArch()))
     items.append(menusystem.Choice(selector=0, value=0, handler=lambda _: exit(0), description='Exit'))
 

@@ -75,8 +75,9 @@ def setup(_):
     vm_config['global']['tool'] = "qemu-system-mips64"
     vm_config.add_section('options')
     vm_config['options']['M'] = "malta"
-    vm_config['options']['append'] = "root=/dev/sda1 console=ttyS0"
+    vm_config['options']['append'] = "'root=/dev/sda1 console=ttyS0'"
     vm_config['options']['nographic'] = ""
+    vm_config['options']['kernel'] = vmlinux
     #vm_config['options']['smp'] = str(smp)
     #vm_config['options']['m'] = memory
 
