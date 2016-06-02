@@ -66,53 +66,6 @@ def installQEMU(_):
     
     input("Press Any Key To Continue")
 
-"""
-def writeConfig():
-    global config
-    
-    #with open(os.path.join(config['global']['base_path'],CONFIG_FILE),"w") as f:
-    with open(CONFIG_FILE,"w") as f:
-        config.write(f)
-
-    # Create needed output dirs
-    os.makedirs(os.path.join(config['global']['base_path'],"environments"),exist_ok=True)
-
-
-def updateConfig(_):
-    global config
-    
-    base_path = input("Base Path [{0}]: ".format(config['global']['base_path']))
-    
-    if base_path != "":
-        config['global']['base_path'] = base_path
-    
-    writeConfig()
-
-
-def initConfig():
-    global config
-    config = configparser.ConfigParser()
-    config.add_section('global')
-
-    config['global']['base_path'] = os.path.dirname(os.path.abspath(__file__))
-    #config['global']['qemu_path'] = ""
-    config['global']['qemu-img'] = ""   
-    config['global']['qemu-system-mips'] = ""
-    
-    writeConfig()    
-
-
-def readConfig():
-    global config
-    config = configparser.ConfigParser()
-    out = config.read(CONFIG_FILE)
-
-    # If there's no config.ini file, make one
-    if out == []:
-        initConfig()
-
-"""
-
 def selectOS(arch):
     """
     Given arch (i.e.: MIPS), return menu for selecting valid Operating Systems
@@ -131,8 +84,6 @@ def selectOS(arch):
         os_items.append(menusystem.Choice(selector=index, value=getTools(), handler=importlib.import_module("installers.{0}.{1}".format(arch,host_os)).setup, description=host_os))
         index += 1
     
-    #items = []
-    #items.append(menusystem.Choice(selector=1, value=1, handler=None, description='MIPS'))
     os_items.append(menusystem.Choice(selector=0, value=0, handler=lambda _: False, description='Back'))
 
     menu = menusystem.MenuSystem.Menu(title='Operating System', choice_list=os_items, prompt='Select Choice.> ') 
@@ -154,8 +105,6 @@ def selectArch():
         arch_items.append(menusystem.Choice(selector=index, value=index, handler=None, description=arch, subMenu=selectOS(arch)))
         index += 1
     
-    #items = []
-    #items.append(menusystem.Choice(selector=1, value=1, handler=None, description='MIPS'))
     arch_items.append(menusystem.Choice(selector=0, value=0, handler=lambda _: False, description='Back'))
 
     menu = menusystem.MenuSystem.Menu(title='Architecture', choice_list=arch_items, prompt='Select Choice.> ') 
@@ -175,48 +124,9 @@ def mainMenu():
     items.append(menusystem.Choice(selector=5, value=5, handler=None, description='Create Environment',subMenu=selectArch()))
     items.append(menusystem.Choice(selector=0, value=0, handler=lambda _: exit(0), description='Exit'))
 
-    #status = FunctionItem("Status",lambda: print(getStatus()) or input())
-    #update_config = FunctionItem("Update Config",updateConfig)
-    #install_qemu = FunctionItem("Install QEMU",installQEMU)
-    #run = MenuItem("Run Environment")
-    #create = FunctionItem("Create Environment",selectArch)
-    
-    
-    """
-    selectArch = CursesMenu("altEnvs v0.1", "Select Architecture") 
-    arch_mips = FunctionItem("MIPS",selectOS,"MIPS")
-    selectArch.append_item(arch_mips)
-    create = SubmenuItem("Create Environment",selectArch)
-    """
-    
     menu = menusystem.MenuSystem.Menu(title='Main Menu', choice_list=items, prompt='Select Choice.> ') 
-    #menu.append_item(status)
-    #menu.append_item(update_config)
-    #menu.append_item(install_qemu)
-    #menu.append_item(run)
-    #menu.append_item(create)
     menu.waitForInput()
 
-"""
-def selectArch():
-    menu = CursesMenu("altEnvs v0.1", "Select Desired Architecture")
-
-    mips = FunctionItem("MIPS",selectMIPSOS)
-
-    menu.append_item(mips)
-    
-    menu.show()
-
-
-def selectMIPSOS():
-    menu = CursesMenu("altEnvs v0.1", "Select OS for MIPS")
-
-    mips = FunctionItem("MIPS",selectMIPSOS)
-
-    menu.append_item(mips)
-    
-    menu.show()
-"""
     
 
 def hasQEMU():
@@ -227,18 +137,6 @@ def hasQEMU():
     
     return True if qemu != None else False
 
-"""
-def getTools():
-   
-    Returns a dictionary of tool paths. Prioritize tools that we explicitly set.
-   
-
-    tools = {}
-    tools['qemu-img'] = config['global']['qemu-img'] if config['global']['qemu-img'] is not "" else shutil.which("qemu-img")
-    tools['qemu-system-mips'] = config['global']['qemu-system-mips'] if config['global']['qemu-system-mips'] is not "" else shutil.which("qemu-system-mips")
-    
-    return tools
-"""
  
 
 def getStatus():
@@ -271,9 +169,6 @@ global config
 
 config = readConfig()
 
-#menu = CursesMenu("altEnvs v0.1", "")
-
 mainMenu()
 
-#menu.show()
 

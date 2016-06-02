@@ -1,7 +1,38 @@
 import shutil
 import configparser
+import multiprocessing
+import os.path
+import os
 
 CONFIG_FILE = "config.ini"
+
+
+def getVMVariables():
+    # TODO: This ins't terribly pythonic...
+    while True:
+        env_name = input("Name your environment: ")
+        # Full path to this new environment
+        full_env_path = os.path.join(config['global']['base_path'],"environments",env_name)
+        if os.path.exists(full_env_path):
+            print("This environment name already exists. Try again.")
+            continue
+        else:
+            # Create the new env
+            os.mkdir(full_env_path)
+            break
+
+    # How big should the hard drive be 
+    hd_size = input("Hard Drive Size [2G]: ")
+    # Default size of 2G
+    hd_size = hd_size if hd_size is not "" else "2G"
+
+    smp = input("Number of CPU Cores [{0}]: ".format(multiprocessing.cpu_count()))
+    smp = int(smp) if smp is not "" else multiprocessing.cpu_count()
+
+    memory = input("Memory [1G]: ")
+    memory = memory if memory is not "" else "1G"
+
+    return env_name, full_env_path, hd_size, smp, memory
 
 
 def readConfig():
@@ -30,6 +61,9 @@ def getTools():
 
 def writeConfig():
     global config
+
+    # Go ahead and save case
+    config.optionxform = str
 
     #with open(os.path.join(config['global']['base_path'],CONFIG_FILE),"w") as f:
     with open(CONFIG_FILE,"w") as f:
