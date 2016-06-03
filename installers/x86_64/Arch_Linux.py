@@ -26,7 +26,7 @@ def setup(_):
     config = readConfig()
     tools = getTools()
 
-    env_name, full_env_path, hd_size, smp, memory = getVMVariables()
+    env_name, full_env_path, hd_size, smp, memory, input_type = getVMVariables()
 
     sys.stdout.write("\nDownloading PXE Boot ... ")
     sys.stdout.flush()
@@ -44,24 +44,12 @@ def setup(_):
   
     sys.stdout.write("Building config file ... ")
     
+    options = {
+        'm': memory,
+        'smp': str(smp),
+    }
 
-    vm_config = configparser.ConfigParser()
-    vm_config.optionxform = str 
-    vm_config.add_section('global')
-    vm_config['global']['tool'] = "qemu-system-x86_64"
-    vm_config.add_section('options')
-    #vm_config['options']['M'] = "malta"
-    #vm_config['options']['append'] = "'root=/dev/sda1 console=ttyS0'"
-    vm_config['options']['nographic'] = ""
-    #vm_config['options']['kernel'] = vmlinux
-    vm_config['options']['smp'] = str(smp)
-    vm_config['options']['m'] = memory
-    vm_config['options']['display'] = "curses"
-    vm_config['options']['vga'] = "vmware"
-    vm_config['options']['full-screen'] = ""
-
-    with open(os.path.join(full_env_path,"config.ini"),"w") as f:
-        vm_config.write(f)
+    input_option = writeVMConfig(env_path=full_env_path,tool="qemu-system-x86_64",input_type=input_type,options=options)
 
     sys.stdout.write(green("[ Completed ]\n"))
 

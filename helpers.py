@@ -8,6 +8,18 @@ CONFIG_FILE = "config.ini"
 
 
 def getVMVariables():
+
+    print("\nInput type defines how you will interact with this VM. The following options are supported by this script:")
+    print("\tconsole - This means no graphics support at all. We will attempt to show VM as a console inline")
+    print("\tcurses - Use the curses library to translate a virtual display. Again, this will be textual, but more graphical than console")
+    print("\tvnc - This will start a VNC server that you can connect to to view the display.")
+    print("Note that one might not work for any given reason. It your screen just stays blank, try a different method.")
+    
+    input_type = ""
+    while input_type not in ['console','curses','vnc']:
+        input_type = input("Input Type: ").lower()
+    
+
     # TODO: This ins't terribly pythonic...
     while True:
         env_name = input("Name your environment: ")
@@ -32,7 +44,7 @@ def getVMVariables():
     memory = input("Memory [1G/1024M]: ")
     memory = memory if memory is not "" else "1G"
 
-    return env_name, full_env_path, hd_size, smp, memory
+    return env_name, full_env_path, hd_size, smp, memory, input_type
 
 
 def readConfig():
@@ -101,4 +113,43 @@ def initConfig():
     config['global']['qemu-system-x86_64'] = ""
 
     writeConfig()
+
+
+def writeVMConfig(env_path,tool,input_type,options):
+    assert type(env_path) is str
+    assert type(tool) is str
+    assert type(input_type) is str
+    assert type(options) is dict
+
+    # Create config
+    vm_config = configparser.ConfigParser()
+    vm_config.optionxform = str 
+
+    # Add what tool we should use
+    vm_config.add_section('global')
+    vm_config['global']['tool'] = tool
+
+
+    # Copy in the options
+    vm_config.add_section('options')
+    
+    for option in options:
+        vm_config['options'][option] = options[option]
+    
+    # Set input type appropriately
+    if input_type == "console":
+        vm_config['options']['nographic'] = ""
+        input_option = " -nographic "
+    elif input_type == "curses":
+        vm_config['options']['vga'] = "vmware"
+        vm_config['options']['display'] = "curses"
+        input_option = " -vga vmware -display curses "
+    else:
+        # VNC is the default display.
+        input_option = ""
+
+    with open(os.path.join(env_path,"config.ini"),"w") as f:
+        vm_config.write(f)
+    
+    return input_option
 

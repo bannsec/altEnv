@@ -35,7 +35,7 @@ def setup(_):
     config = readConfig()
     tools = getTools()
 
-    env_name, full_env_path, hd_size, smp, memory = getVMVariables()
+    env_name, full_env_path, hd_size, smp, memory, input_type = getVMVariables()
 
     with urllib.request.urlopen(base_url) as u:
         html = u.read()
@@ -68,21 +68,14 @@ def setup(_):
   
     sys.stdout.write("Building config file ... ")
     
-
-    vm_config = configparser.ConfigParser()
-    vm_config.optionxform = str 
-    vm_config.add_section('global')
-    vm_config['global']['tool'] = "qemu-system-mips64"
-    vm_config.add_section('options')
-    vm_config['options']['M'] = "malta"
-    vm_config['options']['append'] = "'root=/dev/sda1 console=ttyS0'"
-    vm_config['options']['nographic'] = ""
-    vm_config['options']['kernel'] = vmlinux
-    #vm_config['options']['smp'] = str(smp)
-    #vm_config['options']['m'] = memory
-
-    with open(os.path.join(full_env_path,"config.ini"),"w") as f:
-        vm_config.write(f)
+    options = {
+        'M': 'malta',
+        'append': "'root=/dev/sda1 console=ttyS0'",
+        'kernel': vmlinux,
+        'm': memory
+    }
+    
+    input_option = writeVMConfig(env_path=full_env_path,tool="qemu-system-mips64",input_type=input_type,options=options)
 
     sys.stdout.write(green("[ Completed ]\n"))
 
@@ -91,11 +84,12 @@ def setup(_):
     # Run system to initiate setup
     # Removing SMP for now as it isn't running correctly with that option
     # Also removing memory options. Both seem to either break or have no effect
-    os.system("{0} -M malta -kernel {1} -initrd {2} -hda {3} -append \"root=/dev/ram console=ttyS0\" -nographic".format(
+    os.system("{0} -M malta -kernel {1} -initrd {2} -hda {3} -append \"root=/dev/ram console=ttyS0\" -m {5} {6}".format(
         tools['qemu-system-mips64'],
         os.path.join(full_env_path,vmlinux),
         os.path.join(full_env_path,"initrd.gz"),
         os.path.join(full_env_path,"hda.img"),
         smp,
-        memory
+        memory,
+        input_option
         ))
