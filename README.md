@@ -16,3 +16,7 @@ This repo project is inspired by there being some strange environments that come
 ## x86_64
 
 - Arch Linux
+
+## i386
+
+- Arch Linux
