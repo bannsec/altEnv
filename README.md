@@ -12,3 +12,7 @@ This repo project is inspired by there being some strange environments that come
 ## MIPSEL
 
 - Debian (option for Stable, Testing, Unstable)
+
+## x86_64
+
+- Arch Linux
