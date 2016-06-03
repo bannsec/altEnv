@@ -30,7 +30,7 @@ def setup(_):
     while x not in ['stable','testing',"unstable"]:
         x = input("Which distro? Stable/Testing/Unstable? ").lower()    
 
-    base_url = "http://ftp.de.debian.org/debian/dists/{0}/main/installer-mips/current/images/malta/netboot/".format(x)
+    base_url = "http://ftp.us.debian.org/debian/dists/{0}/main/installer-mips/current/images/malta/netboot/".format(x)
 
     config = readConfig()
     tools = getTools()
