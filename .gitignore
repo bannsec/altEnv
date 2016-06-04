@@ -1,3 +1,9 @@
 *.swp
 *.pyc
 __pycache__
+edk2
+config.ini
+environments
+firmware
+qemu-*
+uefi-tools
