@@ -1,4 +1,4 @@
 curses-menu
 ipython
 natsort
-prettytabls
+prettytables
