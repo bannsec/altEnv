@@ -31,7 +31,7 @@ def installQEMU(_):
     versions = natsort.humansorted([x.decode('ascii') for x in list(set(re.findall(b">qemu-([0-9-\.]+?)\.tar\.bz2",html)))])
     
     # Assuming we want the latest version
-    qemu_version = versions[-1]
+    qemu_version = "qeemu-" + versions[-1]
 
     # TODO: Dynamically determine latest qemu version
     #qemu_version = "qemu-2.6.0"
