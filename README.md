@@ -52,3 +52,7 @@ Not all the view types always work for each OS. If the option you tried didn't s
 
 ## Bootloader Warnings
 Debian will give you a warning about not being able to install a boot loader. This is fine, but you need to be aware of what's going on. Basically, there's no Grub bootloader compiled that supports Debian MIPS/ARM and possibly others. When this is the case, QEMU can still boot but it requires appending an option to specify where the boot partition is. I default this option to /dev/sda1 where needed. This might not be the correct default depending on your partitioning options while you set up. If your boot partition ends up being something different, all you need to do is open the "config.ini" file in your environemnt and change "append" option to be root=/correct/partition/here
+
+## I want to add my own option to QEMU
+Easy! If you want to add an option manually, simply go into the "config.ini" file inside your environment (i.e.: <base path>/environments/blerg/config.ini) and add it under the "options" section. This section is basically parsed directly into the QEMU line as "-option option_value".
+
