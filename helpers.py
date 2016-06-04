@@ -3,6 +3,7 @@ import configparser
 import multiprocessing
 import os.path
 import os
+import json
 
 CONFIG_FILE = "config.ini"
 
@@ -74,7 +75,6 @@ def getTools():
     return tools
 
 
-
 def writeConfig():
     global config
 
@@ -99,6 +99,30 @@ def updateConfig(_):
 
     writeConfig()
 
+def changeViewType(opts):
+    #print("called with opts: ",opts,type(opts))
+    # Looks like there's a bug in the menu system where it's calling the wrong handler...
+    if opts is None:
+        return False
+
+    opts = json.loads(opts)
+    env_name = opts[0]
+    input_type = opts[1]
+
+    full_env = os.path.join(config['global']['base_path'],"environments",env_name)
+
+    vm_config = readVMConfig(env_name)
+
+    options = {}
+    for option in vm_config['options']:
+        # Remove existing view types
+        if option not in ['nographic','vga','display']:
+            options[option] = vm_config['options'][option]
+
+    #print(full_env,vm_config['global']['tool'],input_type,options)
+
+    writeVMConfig(env_path=full_env,tool=vm_config['global']['tool'],input_type=input_type,options=options)
+
 
 def initConfig():
     global config
@@ -115,6 +139,21 @@ def initConfig():
     config['global']['qemu-system-i386'] = ""
 
     writeConfig()
+
+
+def readVMConfig(env_name):
+    """
+    Reads in and returns config object for given VM
+    """
+
+    env_path = os.path.join(config['global']['base_path'],"environments",env_name)
+    config_path = os.path.join(env_path,"config.ini")
+
+    vm_config = configparser.ConfigParser()
+    vm_config.read(config_path)
+    
+    return vm_config
+    
 
 
 def writeVMConfig(env_path,tool,input_type,options):

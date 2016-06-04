@@ -17,6 +17,7 @@ from glob import glob
 import importlib
 from helpers import *
 from natsort import natsort
+import json
 
 def installQEMU(_):
     global config
@@ -162,11 +163,26 @@ def runEnv(env):
     os.system(command)
 
 
+def changeViewTypeMenu(env):
+    options = []
+
+    options.append(menusystem.Choice(selector=1, value=json.dumps((env,"console")), handler=changeViewType, description='Console'))
+    options.append(menusystem.Choice(selector=2, value=json.dumps((env,"curses")), handler=changeViewType, description='Curses'))
+    options.append(menusystem.Choice(selector=3, value=json.dumps((env,"vnc")), handler=changeViewType, description='VNC'))
+    options.append(menusystem.Choice(selector=0, value=0, handler=lambda _: False, description='Back'))
+
+    
+    menu = menusystem.MenuSystem.Menu(title='{0} View Type'.format(env), choice_list=options, prompt='Select Choice.> ') 
+    
+    return menu
+
+
 def selectVMSubMenu(env):
     
     options = []
 
     options.append(menusystem.Choice(selector=1, value=env, handler=runEnv, description='Run Environment'))
+    options.append(menusystem.Choice(selector=2, value=env, handler=changeViewType, description='Change View Type', subMenu=changeViewTypeMenu(env)))
     options.append(menusystem.Choice(selector=0, value=0, handler=lambda _: False, description='Back'))
 
     
