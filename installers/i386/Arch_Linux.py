@@ -38,7 +38,7 @@ def setup(_):
 
     sys.stdout.write("Creating virtual hard drive ... ")
     # TODO: Probably should check output
-    subprocess.check_output("qemu-img create -f qcow {0} {1}".format(os.path.join(full_env_path,"hda.img"),hd_size),shell=True)
+    subprocess.check_output("{2} create -f qcow {0} {1}".format(os.path.join(full_env_path,"hda.img"),hd_size,tools['qemu-img']),shell=True)
 
     sys.stdout.write(green("[ Completed ]\n"))
   
