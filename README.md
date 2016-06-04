@@ -45,6 +45,11 @@ The VNC View Type is actually the QEMU default. In this case, QEMU will start up
 
 - Arch Linux
 
+## ARM64
+
+- Debian (option for Stable, Testing, Unstable)
+
+
 # Common Problems
 
 ## Screen doesn't show anything
