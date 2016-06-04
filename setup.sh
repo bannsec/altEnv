@@ -25,12 +25,12 @@ virtualenv -p $(which python3) "$ALTENV_VENV"
 source "${ALTENV_VENV}/bin/activate"
 
 # Install requirements
-pip install -r ${DIR}/requirements.txt
+${ALTENV_VENV}/bin/pip install -r ${DIR}/requirements.txt
 
 pushd .
 cd ${DIR}/MenuSystem-1.3
 
-python setup.py install
+${ALTENV_VENV}/bin/python setup.py install
 
 popd 2>/dev/null
 
