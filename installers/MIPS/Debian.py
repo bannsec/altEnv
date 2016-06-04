@@ -72,7 +72,8 @@ def setup(_):
         'M': 'malta',
         'append': "'root=/dev/sda1 console=ttyS0'",
         'kernel': vmlinux,
-        'm': memory
+        'm': memory,
+        'cpu': '5KEf'
     }
     
     input_option = writeVMConfig(env_path=full_env_path,tool="qemu-system-mips64",input_type=input_type,options=options)
@@ -84,7 +85,7 @@ def setup(_):
     # Run system to initiate setup
     # Removing SMP for now as it isn't running correctly with that option
     # Also removing memory options. Both seem to either break or have no effect
-    os.system("{0} -M malta -kernel {1} -initrd {2} -hda {3} -append \"root=/dev/ram console=ttyS0\" -m {5} {6}".format(
+    os.system("{0} -M malta -cpu 5KEf -kernel {1} -initrd {2} -hda {3} -append \"root=/dev/ram console=ttyS0\" -m {5} {6}".format(
         tools['qemu-system-mips64'],
         os.path.join(full_env_path,vmlinux),
         os.path.join(full_env_path,"initrd.gz"),
