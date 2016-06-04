@@ -7,9 +7,9 @@ This repo project is inspired by there being some strange environments that come
 To quick start, I've created a setup script. For the time being, I've only tested this for Debian based systems. However, I will extend that to others later.
 
 ```bash
-./setup.sh
-workon altEnv
-./altEnv
+$ ./setup.sh
+$ workon altEnv
+$ ./altEnv
 3
 ```
 
@@ -44,3 +44,11 @@ The VNC View Type is actually the QEMU default. In this case, QEMU will start up
 ## i386
 
 - Arch Linux
+
+# Common Problems
+
+## Screen doesn't show anything
+Not all the view types always work for each OS. If the option you tried didn't show anything, attempt a different View Type. In my experience so far, I haven't found an OS that will not display between the three options.
+
+## Bootloader Warnings
+Debian will give you a warning about not being able to install a boot loader. This is fine, but you need to be aware of what's going on. Basically, there's no Grub bootloader compiled that supports Debian MIPS/ARM and possibly others. When this is the case, QEMU can still boot but it requires appending an option to specify where the boot partition is. I default this option to /dev/sda1 where needed. This might not be the correct default depending on your partitioning options while you set up. If your boot partition ends up being something different, all you need to do is open the "config.ini" file in your environemnt and change "append" option to be root=/correct/partition/here
