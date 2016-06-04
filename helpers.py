@@ -71,6 +71,7 @@ def getTools():
     tools['qemu-system-mips64el'] = config['global']['qemu-system-mips64el'] if config['global']['qemu-system-mips64el'] is not "" else shutil.which("qemu-system-mips64el")
     tools['qemu-system-x86_64'] = config['global']['qemu-system-x86_64'] if config['global']['qemu-system-x86_64'] is not "" else shutil.which("qemu-system-x86_64")
     tools['qemu-system-i386'] = config['global']['qemu-system-i386'] if config['global']['qemu-system-i386'] is not "" else shutil.which("qemu-system-i386")
+    tools['qemu-system-aarch64'] = config['global']['qemu-system-aarch64'] if config['global']['qemu-system-aarch64'] is not "" else shutil.which("qemu-system-aarch64")
 
     return tools
 
@@ -137,6 +138,7 @@ def initConfig():
     config['global']['qemu-system-mips64el'] = ""
     config['global']['qemu-system-x86_64'] = ""
     config['global']['qemu-system-i386'] = ""
+    config['global']['qemu-system-aarch64'] = ""
 
     writeConfig()
 

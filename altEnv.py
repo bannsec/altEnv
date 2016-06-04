@@ -72,6 +72,7 @@ def installQEMU(_):
     config['global']['qemu-system-mips64el'] = os.path.join(config['global']['base_path'],qemu_version,"build","mips64el-softmmu","qemu-system-mips64el")
     config['global']['qemu-system-x86_64'] = os.path.join(config['global']['base_path'],qemu_version,"build","x86_64-softmmu","qemu-system-x86_64")
     config['global']['qemu-system-i386'] = os.path.join(config['global']['base_path'],qemu_version,"build","i386-softmmu","qemu-system-i386")
+    config['global']['qemu-system-aarch64'] = os.path.join(config['global']['base_path'],qemu_version,"build","aarch64-softmmu","qemu-system-aarch64")
     
     sys.stdout.write(green("[ Completed ]\n"))
 
