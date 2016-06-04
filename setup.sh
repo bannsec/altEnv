@@ -37,6 +37,7 @@ mkdir -p ${DIR}/firmware ${DIR}/firmware/arm ${DIR}/firmware/aarch64 2> /dev/nul
 
 cd ${DIR}
 
+echo "Building UEFI Firmware Images ... "
 git clone git://git.linaro.org/uefi/uefi-tools.git 2> $ERROR_LOG
 git clone https://github.com/tianocore/edk2.git 2> $ERROR_LOG
 
