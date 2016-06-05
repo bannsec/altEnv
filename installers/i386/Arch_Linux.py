@@ -47,6 +47,8 @@ def setup(_):
     options = {
         'm': memory,
         'smp': str(smp),
+        'M': 'pc,accel=kvm:xen:tcg',
+        'hda': '$ENV_PATH/hda.img'
     }
 
     input_option = writeVMConfig(env_path=full_env_path,tool="qemu-system-i386",input_type=input_type,options=options)
@@ -56,10 +58,11 @@ def setup(_):
     print("Starting setup ... ") 
     
     # Run system to initiate setup
-    os.system("{0} -hda {1} -nographic -kernel {2} -smp {3} -m {4} -display curses -vga vmware -full-screen".format(
+    os.system("{0} -M pc,accel=kvm:xen:tcg -hda {1} -nographic -kernel {2} -smp {3} -m {4} {5}".format(
         tools['qemu-system-i386'],
         os.path.join(full_env_path,"hda.img"),
         os.path.join(full_env_path,"ipxe_text.lkrn"),
         smp,
-        memory
+        memory,
+        input_option
         ))

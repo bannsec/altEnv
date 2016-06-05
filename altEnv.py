@@ -136,7 +136,7 @@ def runEnv(env):
     # First, create variables
     full_env_path = os.path.join(config['global']['base_path'],'environments',env)
     config_path = os.path.join(full_env_path,"config.ini")
-    disk_path = os.path.join(full_env_path,"hda.img")
+    #disk_path = os.path.join(full_env_path,"hda.img")
     
     # Figure out what tools to use
     tools = getTools()
@@ -149,16 +149,21 @@ def runEnv(env):
     # Generate option strings
     options = ""
     for var in env_config['options']:
+        # Defaulting any options wasn't a good idea. Removing.
         # Need to put full path to kernel when we need to use it
-        if var == "kernel":
-            options += " -kernel {0} ".format(os.path.join(full_env_path,env_config['options'][var]))
-        else:
-            options += " -{0} {1} ".format(var,env_config['options'][var])
+        #if var == "kernel":
+        #    options += " -kernel {0} ".format(os.path.join(full_env_path,env_config['options'][var]))
+        #else:
+        options += " -{0} {1} ".format(var,env_config['options'][var])
     
+    # This wasn't a good idea, not doing it anymore
     # Tack on the hda
-    options += "-hda {0} ".format(os.path.join(full_env_path,"hda.img"))
+    #options += "-hda {0} ".format(os.path.join(full_env_path,"hda.img"))
 
     command = "{0} {1}".format(tools[env_config['global']['tool']],options)
+
+    # Replace the variables
+    command = command.replace("$ENV_PATH",full_env_path)
 
     #print("Running command: {0}".format(command))
     os.system(command)

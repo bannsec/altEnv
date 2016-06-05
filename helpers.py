@@ -51,6 +51,7 @@ def getVMVariables():
 def readConfig():
     global config
     config = configparser.ConfigParser()
+    config.optionxform = str 
     out = config.read(CONFIG_FILE)
 
     # If there's no config.ini file, make one
@@ -152,6 +153,7 @@ def readVMConfig(env_name):
     config_path = os.path.join(env_path,"config.ini")
 
     vm_config = configparser.ConfigParser()
+    vm_config.optionxform = str 
     vm_config.read(config_path)
     
     return vm_config

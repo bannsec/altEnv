@@ -18,11 +18,6 @@ DESCRIPTION = "Installer for Debian running on an emulated MIPS Processor"
 
 def setup(_):
     """Walk the user through setting up a Debian MIPS environment
-    
-     Parameters
-     ----------
-     config : dict
-        Dictionary object containing parsed config values
     """
     print()
 
@@ -69,9 +64,10 @@ def setup(_):
     sys.stdout.write("Building config file ... ")
     
     options = {
-        'M': 'malta',
+        'M': 'malta,accel=kvm:xen:tcg',
+        'hda': '$ENV_PATH/hda.img',
         'append': "'root=/dev/sda1 console=ttyS0'",
-        'kernel': vmlinux,
+        'kernel': '$ENV_PATH/' + vmlinux,
         'm': memory,
         'cpu': '5KEf'
     }
@@ -85,7 +81,7 @@ def setup(_):
     # Run system to initiate setup
     # Removing SMP for now as it isn't running correctly with that option
     # Also removing memory options. Both seem to either break or have no effect
-    os.system("{0} -M malta -cpu 5KEf -kernel {1} -initrd {2} -hda {3} -append \"root=/dev/ram console=ttyS0\" -m {5} {6}".format(
+    os.system("{0} -M malta,accel=kvm:xen:tcg -cpu 5KEf -kernel {1} -initrd {2} -hda {3} -append \"root=/dev/ram console=ttyS0\" -m {5} {6}".format(
         tools['qemu-system-mips64'],
         os.path.join(full_env_path,vmlinux),
         os.path.join(full_env_path,"initrd.gz"),

@@ -18,11 +18,6 @@ DESCRIPTION = "Installer for Debian running on an emulated MIPSEL (little endian
 
 def setup(_):
     """Walk the user through setting up a Debian MIPSEL environment
-    
-     Parameters
-     ----------
-     config : dict
-        Dictionary object containing parsed config values
     """
     print()
 
@@ -70,11 +65,12 @@ def setup(_):
     sys.stdout.write("Building config file ... ")
     
     options = {
-        'M': 'malta',
+        'M': 'malta,accel=kvm:xen:tcg',
         'append': "'root=/dev/sda1 console=ttyS0'",
-        'kernel': vmlinux,
+        'kernel': '$ENV_PATH/' + vmlinux,
         'm': memory,
-        'cpu': '5KEf'
+        'cpu': '5KEf',
+        'hda': '$ENV_PATH/hda.img'
     }
 
     input_option = writeVMConfig(env_path=full_env_path,tool="qemu-system-mips64el",input_type=input_type,options=options)
@@ -86,11 +82,12 @@ def setup(_):
     # Run system to initiate setup
     # Removing SMP for now as it isn't running correctly with that option
     # Also removing memory options. Both seem to either break or have no effect
-    os.system("{0} -M malta -cpu 5KEf -kernel {1} -initrd {2} -hda {3} -append \"root=/dev/ram console=ttyS0\" -nographic".format(
+    os.system("{0} -M malta,accel=kvm:xen:tcg -cpu 5KEf -kernel {1} -initrd {2} -hda {3} -append \"root=/dev/ram console=ttyS0\" {6}".format(
         tools['qemu-system-mips64el'],
         os.path.join(full_env_path,vmlinux),
         os.path.join(full_env_path,"initrd.gz"),
         os.path.join(full_env_path,"hda.img"),
         smp,
-        memory
+        memory,
+        input_option
         ))

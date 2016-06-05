@@ -20,7 +20,19 @@ DESCRIPTION = "Installer for Debian running on an emulated ARM64 Processor"
 def setup(_):
     """Walk the user through setting up a Debian ARM64 environment
     """
-    print()
+
+    print(red("""
+###########
+# Warning #
+###########
+To successfully use this installer you need to follow the guidance posted on: https://gmplib.org/~tege/qemu.html (block 14). This requires a few extra steps before rebooting to ensure that this device can be used
+
+An ssh forward is automatically created for you. Use 'ssh -p 2222 USER@localhost' for your ssh commands"
+"""))
+
+    if input(red("Still Proceed [y/N]? ")).lower() != "y":
+        return
+
 
     x = ""
     while x not in ['stable','testing',"unstable"]:
@@ -60,7 +72,8 @@ def setup(_):
     sys.stdout.write("Copying UEFI image ... ")
     sys.stdout.flush()
 
-    shutil.copy(os.path.join(config['global']['base_path'],"firmware","aarch64","QEMU_EFI.fd"),full_env_path)
+    bios_path = os.path.join(config['global']['base_path'],"firmware","aarch64","QEMU_EFI.fd")
+    shutil.copy(bios_path, full_env_path)
     
     sys.stdout.write(green("[ Completed ]\n"))
 
@@ -73,14 +86,16 @@ def setup(_):
     sys.stdout.write("Building config file ... ")
     
     options = {
-        'M': 'virt',
-        'append': "'root=/dev/sda1'",
-        'kernel': "linux",
+        'M': 'virt,accel=kvm:xen:tcg',
+        'append': "'root=/dev/vda2'",
+        'kernel': "$ENV_PATH/linux",
+        'initrd': "$ENV_PATH/initrd.gz",
         'm': memory,
         'cpu': 'cortex-a57',
-        'device': 'virtio-net-device,netdev=mynet0',
+        'device': 'virtio-net-device,netdev=mynet0 -device virtio-blk-device,drive=blk',
         'netdev': 'user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9',
-        'smp': str(smp)
+        'smp': str(smp),
+        'bios': "$ENV_PATH/QEMU_EFI.fd",
     }
     
     input_option = writeVMConfig(env_path=full_env_path,tool="qemu-system-aarch64",input_type=input_type,options=options)
@@ -90,14 +105,13 @@ def setup(_):
     print("Starting setup ... ") 
     
     # Run system to initiate setup
-    # Removing SMP for now as it isn't running correctly with that option
-    # Also removing memory options. Both seem to either break or have no effect
-    os.system("{0} -M virt -cpu cortex-a57 -kernel {1} -initrd {2} -hda {3} -smp {4} -m {5} -device virtio-net-device,netdev=mynet0 -netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9 {6}".format(
+    os.system("{0} -M virt,accel=kvm:xen:tcg -cpu cortex-a57 -kernel {1} -initrd {2} -smp {4} -m {5} -device virtio-net-device,netdev=mynet0 -netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9,hostfwd=tcp::2222-:22 -bios {7} -drive file={3},if=none,id=blk -device virtio-blk-device,drive=blk {6}".format(
         tools['qemu-system-aarch64'],
         os.path.join(full_env_path,"linux"),
         os.path.join(full_env_path,"initrd.gz"),
         os.path.join(full_env_path,"hda.img"),
         smp,
         memory,
-        input_option
+        input_option,
+        bios_path
         ))
