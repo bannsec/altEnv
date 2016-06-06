@@ -8,7 +8,7 @@ import json
 CONFIG_FILE = "config.ini"
 
 
-def getVMVariables():
+def getVMVariables(input_recommend=None):
 
     print("\nInput type defines how you will interact with this VM. The following options are supported by this script:")
     print("\tgtk - This will pop up a window locally on your machine to view this VM. This is likely what you want.")
@@ -16,6 +16,8 @@ def getVMVariables():
     print("\tcurses - Use the curses library to translate a virtual display. Again, this will be textual, but more graphical than console")
     print("\tvnc - This will start a VNC server that you can connect to to view the display.")
     print("Note that one might not work for any given reason. It your screen just stays blank, try a different method.")
+    if input_recommend is not None:
+        print("Recommend type \"{0}\"".format(input_recommend))
     
     input_type = ""
     while input_type not in ['console','curses','vnc','gtk']:
@@ -195,17 +197,17 @@ def writeVMConfig(env_path,tool,input_type,options):
         vm_config['options']['nographic'] = ""
         input_option = " -nographic "
     elif input_type == "curses":
-        vm_config['options']['vga'] = "vmware"
+        #vm_config['options']['vga'] = "vmware"
         vm_config['options']['display'] = "curses"
-        input_option = " -vga vmware -display curses "
+        input_option = " -display curses "
     elif input_type == "vnc":
-        vm_config['options']['vga'] = "vmware"
+        #vm_config['options']['vga'] = "vmware"
         vm_config['options']['display'] = "vnc"
-        input_option = " -vga vmware -display vnc "
+        input_option = " -display vnc "
     elif input_type == "gtk":
-        vm_config['options']['vga'] = "vmware"
+        #vm_config['options']['vga'] = "vmware"
         vm_config['options']['display'] = "gtk"
-        input_option = " -vga vmware -display gtk "
+        input_option = " -display gtk "
     else:
         raise Exception("Illegal Input Type option of \"{0}\"".format(input_type))
 

@@ -51,6 +51,7 @@ def setup(_):
     sys.stdout.write(green("[ Completed ]\n"))
 
     sys.stdout.write("Creating virtual hard drive ... ")
+    sys.stdout.flush()
 
     if optimize:
         subprocess.check_output("{2} create -f raw {0} {1}".format(os.path.join(full_env_path,"hda.img"),hd_size,tools['qemu-img']),shell=True)

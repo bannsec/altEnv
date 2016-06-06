@@ -30,7 +30,8 @@ To successfully use this installer you need to follow the guidance posted on: ht
 An ssh forward is automatically created for you. Use 'ssh -p 2222 USER@localhost' for your ssh commands"
 """))
 
-    if input(red("Still Proceed [y/N]? ")).lower() != "y":
+    if input(red("Still Proceed [y/N]? ")).lower() not in ["y",'yes']:
+        print("Aborting install")
         return
 
 
@@ -43,7 +44,7 @@ An ssh forward is automatically created for you. Use 'ssh -p 2222 USER@localhost
     config = readConfig()
     tools = getTools()
 
-    env_name, full_env_path, hd_size, smp, memory, input_type = getVMVariables()
+    env_name, full_env_path, hd_size, smp, memory, input_type, optimize = getVMVariables(input_recommend="console")
 
     with urllib.request.urlopen(base_url) as u:
         html = u.read()
@@ -78,8 +79,10 @@ An ssh forward is automatically created for you. Use 'ssh -p 2222 USER@localhost
     sys.stdout.write(green("[ Completed ]\n"))
 
     sys.stdout.write("Creating virtual hard drive ... ")
-    # TODO: Probably should check output
-    subprocess.check_output("{2} create -f qcow {0} {1}".format(os.path.join(full_env_path,"hda.img"),hd_size,tools['qemu-img']),shell=True)
+    if optimize:
+        subprocess.check_output("{2} create -f raw {0} {1}".format(os.path.join(full_env_path,"hda.img"),hd_size,tools['qemu-img']),shell=True)
+    else:
+        subprocess.check_output("{2} create -f qcow {0} {1}".format(os.path.join(full_env_path,"hda.img"),hd_size,tools['qemu-img']),shell=True)
 
     sys.stdout.write(green("[ Completed ]\n"))
   
@@ -92,11 +95,23 @@ An ssh forward is automatically created for you. Use 'ssh -p 2222 USER@localhost
         'initrd': "$ENV_PATH/initrd.gz",
         'm': memory,
         'cpu': 'cortex-a57',
-        'device': 'virtio-net-device,netdev=mynet0 -device virtio-blk-device,drive=blk',
+        'device': 'virtio-net-device,netdev=mynet0',# -device virtio-blk-device,drive=blk',
         'netdev': 'user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9',
         'smp': str(smp),
         'bios': "$ENV_PATH/QEMU_EFI.fd",
     }
+
+    """
+    if optimize:
+        options['drive'] = 'file=$ENV_PATH/hda.img,if=virtio,cache=writeback,format=raw'
+        drive = "-drive {0}".format(options['drive'].replace("$ENV_PATH",full_env_path))
+    else:
+        options['drive'] = 'file=$ENV_PATH/hda.img,if=none,format=qcow2,id=blk  -device virtio-blk-device,drive=blk '
+        drive = "-drive {0}".format(options['drive'].replace("$ENV_PATH",full_env_path))
+    """
+    #options['drive'] = 'file=$ENV_PATH/hda.img,if=virtio,cache=writeback'
+    options['drive'] = 'file=$ENV_PATH/hda.img,if=none,cache=writeback,id=blk -device virtio-blk-device,drive=blk '
+    drive = "-drive {0}".format(options['drive'].replace("$ENV_PATH",full_env_path))
     
     input_option = writeVMConfig(env_path=full_env_path,tool="qemu-system-aarch64",input_type=input_type,options=options)
 
@@ -105,11 +120,13 @@ An ssh forward is automatically created for you. Use 'ssh -p 2222 USER@localhost
     print("Starting setup ... ") 
     
     # Run system to initiate setup
-    os.system("{0} -M virt,accel=kvm:xen:tcg -cpu cortex-a57 -kernel {1} -initrd {2} -smp {4} -m {5} -device virtio-net-device,netdev=mynet0 -netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9,hostfwd=tcp::2222-:22 -bios {7} -drive file={3},if=none,id=blk -device virtio-blk-device,drive=blk {6}".format(
+    #os.system("{0} -M virt,accel=kvm:xen:tcg -cpu cortex-a57 -kernel {1} -initrd {2} -smp {4} -m {5} -device virtio-net-device,netdev=mynet0 -netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9,hostfwd=tcp::2222-:22 -bios {7} -drive file={3},if=none,id=blk -device virtio-blk-device,drive=blk {6}".format(
+    os.system("{0} -M virt,accel=kvm:xen:tcg -cpu cortex-a57 -kernel {1} -initrd {2} -smp {4} -m {5} -device virtio-net-device,netdev=mynet0 -netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.9,hostfwd=tcp::2222-:22 -bios {7} {3} {6}".format(
         tools['qemu-system-aarch64'],
         os.path.join(full_env_path,"linux"),
         os.path.join(full_env_path,"initrd.gz"),
-        os.path.join(full_env_path,"hda.img"),
+        #os.path.join(full_env_path,"hda.img"),
+        drive,
         smp,
         memory,
         input_option,
