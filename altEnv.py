@@ -273,6 +273,15 @@ def getStatus():
         qemu = red("QEMU not found!")
     
     t.add_row(["QEMU",qemu])
+
+    # Check KVM status
+    try:
+        out = subprocess.check_output("kvm-ok",shell=True)
+        kvm = green(out.decode('ascii').strip())
+    except Exception as e:
+        kvm = red(e.output.decode('ascii').strip())
+
+    t.add_row(["KVM Acceleration",kvm])
     
     return t
 

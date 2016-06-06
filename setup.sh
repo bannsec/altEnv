@@ -5,7 +5,7 @@
 
 if [[ "$OS" = "linux" ]] && [[ "$DistroBasedOn" = "debian" ]]; then
     sudo apt-get update
-    sudo apt-get install -y make gcc virtualenv virtualenvwrapper python3 uuid-dev gcc-aarch64-linux-gnu gcc-arm-linux-gnueabihf git
+    sudo apt-get install -y make gcc virtualenv virtualenvwrapper python3 uuid-dev gcc-aarch64-linux-gnu gcc-arm-linux-gnueabihf git cpu-checker
 else
     echo "Don't know prereqs for your distro. You should help me!"
 fi
