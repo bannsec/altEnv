@@ -12,12 +12,12 @@ from tcolors import *
 import configparser
 import multiprocessing
 
-NAME = "Ubuntu Linux x86_64"
-DESCRIPTION = "Installer for Ubuntu Linux running on an emulated x86_64 Processor"
+NAME = "Ubuntu Linux i386"
+DESCRIPTION = "Installer for Ubuntu Linux running on an emulated i386 Processor"
 
 
 def setup(_):
-    """Walk the user through setting up an Ubuntu Linux x86_64 environment
+    """Walk the user through setting up an Ubuntu Linux i386 environment
     """
     print()
 
@@ -35,12 +35,12 @@ def setup(_):
     while dist not in dists:
         dist = input("Select Distribution: ").lower()
 
-    url = "http://archive.ubuntu.com/ubuntu/dists/{0}/main/installer-amd64/current/images/netboot/mini.iso".format(dist)
+    url = "http://archive.ubuntu.com/ubuntu/dists/{0}/main/installer-i386/current/images/netboot/mini.iso".format(dist)
 
     config = readConfig()
     tools = getTools()
 
-    env_name, full_env_path, hd_size, smp, memory, input_type, optimize = getVMVariables()
+    env_name, full_env_path, hd_size, smp, memory, input_type = getVMVariables()
 
     sys.stdout.write("\nDownloading iso ... ")
     sys.stdout.flush()
@@ -51,11 +51,8 @@ def setup(_):
     sys.stdout.write(green("[ Completed ]\n"))
 
     sys.stdout.write("Creating virtual hard drive ... ")
-
-    if optimize:
-        subprocess.check_output("{2} create -f raw {0} {1}".format(os.path.join(full_env_path,"hda.img"),hd_size,tools['qemu-img']),shell=True)
-    else:
-        subprocess.check_output("{2} create -f qcow {0} {1}".format(os.path.join(full_env_path,"hda.img"),hd_size,tools['qemu-img']),shell=True)
+    # TODO: Probably should check output
+    subprocess.check_output("{2} create -f qcow {0} {1}".format(os.path.join(full_env_path,"hda.img"),hd_size,tools['qemu-img']),shell=True)
 
     sys.stdout.write(green("[ Completed ]\n"))
   
@@ -68,23 +65,16 @@ def setup(_):
         'hda': '$ENV_PATH/hda.img'
     }
 
-    if optimize:
-        options['drive'] = 'file=$ENV_PATH/hda.img,if=virtio,cache=writeback,format=raw'
-        drive = "-drive {0}".format(options['drive'].replace("$ENV_PATH",full_env_path))
-    else:
-        options['hda'] = '$ENV_PATH/hda.img'
-        drive = "-hda {0}".format(options['hda'].replace("$ENV_PATH",full_env_path))
-
-    input_option = writeVMConfig(env_path=full_env_path,tool="qemu-system-x86_64",input_type=input_type,options=options)
+    input_option = writeVMConfig(env_path=full_env_path,tool="qemu-system-i386",input_type=input_type,options=options)
 
     sys.stdout.write(green("[ Completed ]\n"))
 
     print("Starting setup ... ") 
     
     # Run system to initiate setup
-    os.system("{0} {1} -M pc,accel=kvm:xen:tcg -cdrom {2} -smp {3} -m {4} {5}".format(
-        tools['qemu-system-x86_64'],
-        drive,
+    os.system("{0} -hda {1} -M pc,accel=kvm:xen:tcg -cdrom {2} -smp {3} -m {4} {5}".format(
+        tools['qemu-system-i386'],
+        os.path.join(full_env_path,"hda.img"),
         os.path.join(full_env_path,"mini.iso"),
         smp,
         memory,

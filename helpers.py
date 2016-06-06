@@ -46,7 +46,15 @@ def getVMVariables():
     memory = input("Memory [1G/1024M]: ")
     memory = memory if memory is not "" else "1G"
 
-    return env_name, full_env_path, hd_size, smp, memory, input_type
+    optimize = ""
+    print("Optimizations are non-standard options that might improve performance. However, they also might cause the system to not work and involve tradeoffs in hard disk size/capability for performance. If the optimization causes the install to not work, attempt again without optimization.")
+
+    while optimize not in ['y','yes','n','no']:
+        optimize = input("Enable optimization [y/n]? ").lower()
+
+    optimize = True if optimize in ['y','yes'] else False
+
+    return env_name, full_env_path, hd_size, smp, memory, input_type, optimize
 
 
 def readConfig():
