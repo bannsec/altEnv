@@ -11,13 +11,14 @@ CONFIG_FILE = "config.ini"
 def getVMVariables():
 
     print("\nInput type defines how you will interact with this VM. The following options are supported by this script:")
+    print("\tgtk - This will pop up a window locally on your machine to view this VM. This is likely what you want.")
     print("\tconsole - This means no graphics support at all. We will attempt to show VM as a console inline")
     print("\tcurses - Use the curses library to translate a virtual display. Again, this will be textual, but more graphical than console")
     print("\tvnc - This will start a VNC server that you can connect to to view the display.")
     print("Note that one might not work for any given reason. It your screen just stays blank, try a different method.")
     
     input_type = ""
-    while input_type not in ['console','curses','vnc']:
+    while input_type not in ['console','curses','vnc','gtk']:
         input_type = input("Input Type: ").lower()
     
 
@@ -189,9 +190,16 @@ def writeVMConfig(env_path,tool,input_type,options):
         vm_config['options']['vga'] = "vmware"
         vm_config['options']['display'] = "curses"
         input_option = " -vga vmware -display curses "
+    elif input_type == "vnc":
+        vm_config['options']['vga'] = "vmware"
+        vm_config['options']['display'] = "vnc"
+        input_option = " -vga vmware -display vnc "
+    elif input_type == "gtk":
+        vm_config['options']['vga'] = "vmware"
+        vm_config['options']['display'] = "gtk"
+        input_option = " -vga vmware -display gtk "
     else:
-        # VNC is the default display.
-        input_option = ""
+        raise Exception("Illegal Input Type option of \"{0}\"".format(input_type))
 
     with open(os.path.join(env_path,"config.ini"),"w") as f:
         vm_config.write(f)

@@ -57,7 +57,7 @@ def installQEMU(_):
     
     # Configure
     try:
-        subprocess.check_output("../configure --python=python2",shell=True,cwd=os.path.join(config['global']['base_path'],qemu_version,"build"))
+        subprocess.check_output("../configure --python=python2 --enable-gtk",shell=True,cwd=os.path.join(config['global']['base_path'],qemu_version,"build"))
     except Exception as e:
         print(e.output)
         exit(0)
@@ -175,6 +175,7 @@ def changeViewTypeMenu(env):
     options.append(menusystem.Choice(selector=1, value=json.dumps((env,"console")), handler=changeViewType, description='Console'))
     options.append(menusystem.Choice(selector=2, value=json.dumps((env,"curses")), handler=changeViewType, description='Curses'))
     options.append(menusystem.Choice(selector=3, value=json.dumps((env,"vnc")), handler=changeViewType, description='VNC'))
+    options.append(menusystem.Choice(selector=4, value=json.dumps((env,"gtk")), handler=changeViewType, description='GTK'))
     options.append(menusystem.Choice(selector=0, value=0, handler=lambda _: False, description='Back'))
 
     
