@@ -39,6 +39,7 @@ The VNC View Type is actually the QEMU default. In this case, QEMU will start up
 
 ## x86_64
 
+- Ubuntu (any current distro)
 - Arch Linux
 
 ## i386
