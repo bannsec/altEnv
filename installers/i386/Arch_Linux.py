@@ -57,15 +57,20 @@ def setup(_):
     options = {
         'm': memory,
         'smp': str(smp),
-        'M': 'pc,accel=kvm:xen:tcg',
     }
 
     if optimize:
         options['drive'] = 'file=$ENV_PATH/hda.img,if=virtio,cache=writeback,format=raw'
         drive = "-drive {0}".format(options['drive'].replace("$ENV_PATH",full_env_path))
+
+        options['M'] = "'pc,accel=kvm:xen:tcg'"
+        M = "-M {0}".format(options['M'])
+
     else:
         options['hda'] = '$ENV_PATH/hda.img'
         drive = "-hda {0}".format(options['hda'].replace("$ENV_PATH",full_env_path))
+        
+        M = ""
 
 
     input_option = writeVMConfig(env_path=full_env_path,tool="qemu-system-i386",input_type=input_type,options=options)
@@ -75,12 +80,13 @@ def setup(_):
     print("Starting setup ... ") 
     
     # Run system to initiate setup
-    os.system("{0} -M pc,accel=kvm:xen:tcg {1} -kernel {2} -smp {3} -m {4} {5}".format(
+    os.system("{0} {6} {1} -kernel {2} -smp {3} -m {4} {5}".format(
         tools['qemu-system-i386'],
         #os.path.join(full_env_path,"hda.img"),
         drive,
         os.path.join(full_env_path,"ipxe.lkrn"),
         smp,
         memory,
-        input_option
+        input_option,
+        M
         ))
