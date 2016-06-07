@@ -24,7 +24,7 @@ def setup(_):
     config = readConfig()
     tools = getTools()
 
-    env_name, full_env_path, hd_size, smp, memory, input_type, optimize = getVMVariables()
+    env_name, full_env_path, hd_size, smp, memory, input_type, optimize = getVMVariables(input_recommend="gtk")
 
     # Find the current url
     with urllib.request.urlopen("https://www.archlinux.org/releng/netboot/") as f:
