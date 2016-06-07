@@ -101,15 +101,6 @@ An ssh forward is automatically created for you. Use 'ssh -p 2222 USER@localhost
         'bios': "$ENV_PATH/QEMU_EFI.fd",
     }
 
-    """
-    if optimize:
-        options['drive'] = 'file=$ENV_PATH/hda.img,if=virtio,cache=writeback,format=raw'
-        drive = "-drive {0}".format(options['drive'].replace("$ENV_PATH",full_env_path))
-    else:
-        options['drive'] = 'file=$ENV_PATH/hda.img,if=none,format=qcow2,id=blk  -device virtio-blk-device,drive=blk '
-        drive = "-drive {0}".format(options['drive'].replace("$ENV_PATH",full_env_path))
-    """
-    #options['drive'] = 'file=$ENV_PATH/hda.img,if=virtio,cache=writeback'
     options['drive'] = 'file=$ENV_PATH/hda.img,if=none,cache=writeback,id=blk -device virtio-blk-device,drive=blk '
     drive = "-drive {0}".format(options['drive'].replace("$ENV_PATH",full_env_path))
     

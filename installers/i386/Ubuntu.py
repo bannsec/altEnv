@@ -40,7 +40,7 @@ def setup(_):
     config = readConfig()
     tools = getTools()
 
-    env_name, full_env_path, hd_size, smp, memory, input_type = getVMVariables()
+    env_name, full_env_path, hd_size, smp, memory, input_type, optimize = getVMVariables(input_recommend="gtk")
 
     sys.stdout.write("\nDownloading iso ... ")
     sys.stdout.flush()
@@ -51,8 +51,12 @@ def setup(_):
     sys.stdout.write(green("[ Completed ]\n"))
 
     sys.stdout.write("Creating virtual hard drive ... ")
-    # TODO: Probably should check output
-    subprocess.check_output("{2} create -f qcow {0} {1}".format(os.path.join(full_env_path,"hda.img"),hd_size,tools['qemu-img']),shell=True)
+    sys.stdout.flush()
+
+    if optimize:
+        subprocess.check_output("{2} create -f raw {0} {1}".format(os.path.join(full_env_path,"hda.img"),hd_size,tools['qemu-img']),shell=True)
+    else:
+        subprocess.check_output("{2} create -f qcow {0} {1}".format(os.path.join(full_env_path,"hda.img"),hd_size,tools['qemu-img']),shell=True)
 
     sys.stdout.write(green("[ Completed ]\n"))
   
@@ -62,8 +66,15 @@ def setup(_):
         'm': memory,
         'smp': str(smp),
         'M': "pc,accel=kvm:xen:tcg",
-        'hda': '$ENV_PATH/hda.img'
     }
+
+    if optimize:
+        options['drive'] = 'file=$ENV_PATH/hda.img,if=virtio,cache=writeback,format=raw'
+        drive = "-drive {0}".format(options['drive'].replace("$ENV_PATH",full_env_path))
+    else:
+        options['hda'] = '$ENV_PATH/hda.img'
+        drive = "-hda {0}".format(options['hda'].replace("$ENV_PATH",full_env_path))
+
 
     input_option = writeVMConfig(env_path=full_env_path,tool="qemu-system-i386",input_type=input_type,options=options)
 
@@ -72,9 +83,10 @@ def setup(_):
     print("Starting setup ... ") 
     
     # Run system to initiate setup
-    os.system("{0} -hda {1} -M pc,accel=kvm:xen:tcg -cdrom {2} -smp {3} -m {4} {5}".format(
+    os.system("{0} {1} -M pc,accel=kvm:xen:tcg -cdrom {2} -smp {3} -m {4} {5}".format(
         tools['qemu-system-i386'],
-        os.path.join(full_env_path,"hda.img"),
+        #os.path.join(full_env_path,"hda.img"),
+        drive,
         os.path.join(full_env_path,"mini.iso"),
         smp,
         memory,

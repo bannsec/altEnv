@@ -40,7 +40,7 @@ def setup(_):
     config = readConfig()
     tools = getTools()
 
-    env_name, full_env_path, hd_size, smp, memory, input_type, optimize = getVMVariables()
+    env_name, full_env_path, hd_size, smp, memory, input_type, optimize = getVMVariables(input_recommend="gtk")
 
     sys.stdout.write("\nDownloading iso ... ")
     sys.stdout.flush()
@@ -66,7 +66,6 @@ def setup(_):
         'm': memory,
         'smp': str(smp),
         'M': "pc,accel=kvm:xen:tcg",
-        'hda': '$ENV_PATH/hda.img'
     }
 
     if optimize:
