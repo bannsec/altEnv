@@ -67,3 +67,9 @@ Debian will give you a warning about not being able to install a boot loader. Th
 ## I want to add my own option to QEMU
 Easy! If you want to add an option manually, simply go into the "config.ini" file inside your environment (i.e.: <base path>/environments/blerg/config.ini) and add it under the "options" section. This section is basically parsed directly into the QEMU line as "-option option_value".
 
+## How do I forward SSH/port x?
+Forwarding a port is simple. Add the following line to your environment config.ini file if you want to forward port 2222 to the virtual machine's port 22 (forwarding SSH):
+
+`redir = tcp:2222::22`
+
+Change ports as you need to.
