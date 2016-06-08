@@ -43,6 +43,8 @@ The VNC View Type is actually the QEMU default. In this case, QEMU will start up
 - Arch Linux
 - Kali Linux
 - OpenBSD
+- NetBSD
+- FreeBSD
 
 ## i386
 
