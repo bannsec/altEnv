@@ -19,6 +19,17 @@ from helpers import *
 from natsort import natsort
 import json
 
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+INCLUDE_DIR = os.path.join(SCRIPT_DIR,"include","lib")
+
+# Add our custom library location
+if "LD_LIBRARY_PATH" in os.environ:
+    os.environ['LD_LIBRARY_PATH'] += ":" + INCLUDE_DIR
+else:
+    os.environ['LD_LIBRARY_PATH'] = INCLUDE_DIR
+
+
+
 def installQEMU(_):
     global config
 
@@ -56,8 +67,9 @@ def installQEMU(_):
     os.makedirs(os.path.join(config['global']['base_path'],qemu_version,"build"),exist_ok=True)
     
     # Configure
+    # virglrenderer package is only in the dev version of Ubuntu right now...
     try:
-        subprocess.check_output("../configure --python=python2 --enable-gtk --with-gtkabi=3.0 --enable-opengl --enable-linux-aio --enable-curses --enable-vnc --enable-xen --enable-system --enable-user --enable-kvm",shell=True,cwd=os.path.join(config['global']['base_path'],qemu_version,"build"))
+        subprocess.check_output("../configure --python=python2 --enable-gtk --with-gtkabi=3.0 --enable-opengl --enable-linux-aio --enable-curses --enable-vnc --enable-xen --enable-system --enable-user --enable-kvm --enable-virglrenderer",shell=True,cwd=os.path.join(config['global']['base_path'],qemu_version,"build"))
     except Exception as e:
         print(e.output)
         exit(0)
