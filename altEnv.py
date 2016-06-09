@@ -57,7 +57,7 @@ def installQEMU(_):
     
     # Configure
     try:
-        subprocess.check_output("../configure --python=python2 --enable-gtk --enable-linux-aio --enable-curses --enable-vnc --enable-xen --enable-system --enable-user --enable-kvm",shell=True,cwd=os.path.join(config['global']['base_path'],qemu_version,"build"))
+        subprocess.check_output("../configure --python=python2 --enable-gtk --with-gtkabi=3.0 --enable-opengl --enable-linux-aio --enable-curses --enable-vnc --enable-xen --enable-system --enable-user --enable-kvm",shell=True,cwd=os.path.join(config['global']['base_path'],qemu_version,"build"))
     except Exception as e:
         print(e.output)
         exit(0)
