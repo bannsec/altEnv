@@ -21,6 +21,7 @@ import json
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 INCLUDE_DIR = os.path.join(SCRIPT_DIR,"include","lib")
+PKG_CONFIG_DIR = os.path.join(SCRIPT_DIR,"include","lib","pkgconfig")
 
 # Add our custom library location
 if "LD_LIBRARY_PATH" in os.environ:
@@ -28,6 +29,11 @@ if "LD_LIBRARY_PATH" in os.environ:
 else:
     os.environ['LD_LIBRARY_PATH'] = INCLUDE_DIR
 
+# Add our custom pkg-config location
+if "PKG_CONFIG_PATH" in os.environ:
+    os.environ['PKG_CONFIG_PATH'] += ":" + PKG_CONFIG_DIR
+else:
+    os.environ['PKG_CONFIG_PATH'] = PKG_CONFIG_DIR
 
 
 def installQEMU(_):
