@@ -45,6 +45,8 @@ The VNC View Type is actually the QEMU default. In this case, QEMU will start up
 - OpenBSD
 - NetBSD
 - FreeBSD
+- Gentoo
+
 
 ## i386
 
