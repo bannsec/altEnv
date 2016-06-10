@@ -57,6 +57,9 @@ The VNC View Type is actually the QEMU default. In this case, QEMU will start up
 
 - Debian (option for Stable, Testing, Unstable)
 
+# Installer Tested Against
+
+- Ubuntu 15.10
 
 # Common Problems
 

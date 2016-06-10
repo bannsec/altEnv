@@ -75,7 +75,7 @@ def installQEMU(_):
     # Configure
     # virglrenderer package is only in the dev version of Ubuntu right now...
     try:
-        subprocess.check_output("../configure --python=python2 --enable-gtk --with-gtkabi=3.0 --enable-opengl --enable-linux-aio --enable-curses --enable-vnc --enable-xen --enable-system --enable-user --enable-kvm --enable-virglrenderer",shell=True,cwd=os.path.join(config['global']['base_path'],qemu_version,"build"))
+        subprocess.check_output("../configure --python=python2 --enable-gtk --with-gtkabi=3.0 --enable-opengl --enable-linux-aio --enable-curses --enable-vnc --enable-xen --enable-system --enable-user --enable-kvm --enable-virglrenderer --extra-cflags=\"-I{0}\"".format(os.path.join(SCRIPT_DIR,"include","include")),shell=True,cwd=os.path.join(config['global']['base_path'],qemu_version,"build"))
     except Exception as e:
         print(e.output)
         exit(0)
