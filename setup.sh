@@ -50,6 +50,8 @@ install_mesa () {
     # Clean up LLVM
     rm -rf ${DIR}/builds/clang*
 
+    rm -rf ${DIR}/builds/mesa*
+
     popd 2>/dev/null
 
 }
@@ -68,6 +70,8 @@ install_libepoxy () {
     make -j `nproc` 2>> $ERROR_LOG
 
     make install 2>> $ERROR_LOG
+
+    rm -rf ${DIR}/builds/libepoxy*
 
     popd 
 }
@@ -95,6 +99,8 @@ install_drm () {
 
     make install 2>> $ERROR_LOG
 
+    rm -rf ${DIR}/builds/libdrm*
+
     popd    
 }
 
@@ -114,6 +120,8 @@ install_virglrenderer() {
     make -j `nproc` 2>> $ERROR_LOG
 
     make install 2>> $ERROR_LOG
+
+    rm -rf ${DIR}/builds/virglrenderer
 
     popd
 }
