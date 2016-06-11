@@ -192,4 +192,4 @@ cp ./Build/ArmVirtQemu-ARM/RELEASE_GCC49/FV/QEMU_EFI.fd ${DIR}/firmware/arm/. 2>
 popd 2>/dev/null
 
 echo "Install complete."
-echo "Remember to activate the altEnv virtualenv before using '$ source ${ALTENV_VENV}/bin/activate)'"
+echo "Remember to activate the altEnv virtualenv before using '$ source ${ALTENV_VENV}/bin/activate' (or 'workon altEnv' if you have the wrappers installed)"
