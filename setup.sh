@@ -136,7 +136,7 @@ install_virglrenderer() {
 
 if [[ "$OS" = "linux" ]] && [[ "$DistroBasedOn" = "debian" ]]; then
     sudo apt-get update
-    sudo apt-get install -y make gcc virtualenv virtualenvwrapper python3 uuid-dev gcc-aarch64-linux-gnu gcc-arm-linux-gnueabihf git cpu-checker libgtk-3-dev libsdl2-dev libaio-dev libxen-dev libepoxy-dev libdrm-dev libgbm-dev x11proto-dri3-dev x11proto-present-dev libpciaccess-dev libomxil-bellagio-dev xutils-dev curl wget coreutils
+    sudo apt-get install -y make gcc virtualenv virtualenvwrapper python3 uuid-dev gcc-aarch64-linux-gnu gcc-arm-linux-gnueabihf git libgtk-3-dev libsdl2-dev libaio-dev libxen-dev libepoxy-dev libdrm-dev libgbm-dev x11proto-dri3-dev x11proto-present-dev libpciaccess-dev libomxil-bellagio-dev xutils-dev curl wget coreutils
 
     
     # Need to build virglrenderer as Ubuntu only supports it in Yakkety
