@@ -19,7 +19,19 @@ DESCRIPTION = "Installer for Debian running on an emulated MIPS Processor"
 def setup(_):
     """Walk the user through setting up a Debian MIPS environment
     """
-    print()
+
+    print(red("""
+###########
+# Warning #
+###########
+To successfully use this installer you need to follow the guidance posted on: https://gmplib.org/~tege/qemu.html (block 8). This requires a few extra steps before rebooting to ensure that this device can be used
+
+"""))
+
+    if input(red("Still Proceed [y/N]? ")).lower() not in ["y",'yes']:
+        print("Aborting install")
+        return
+
 
     x = ""
     while x not in ['stable','testing',"unstable"]:
