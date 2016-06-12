@@ -278,7 +278,6 @@ def getStatus():
     t.header = False
 
     # Check for QEMU
-    #qemu = hasQEMU()
     tools = getTools()
     
     # If qemu is found, grab the version
@@ -295,7 +294,7 @@ def getStatus():
 
     # Check KVM status
     try:
-        out = subprocess.check_output("kvm-ok",shell=True)
+        out = subprocess.check_output(os.path.join(config["global"]["base_path"],"kvm-ok"),shell=True)
         kvm = green(out.decode('ascii').strip())
     except Exception as e:
         kvm = red(e.output.decode('ascii').strip())
