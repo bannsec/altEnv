@@ -78,7 +78,7 @@ def installQEMU(_):
         subprocess.check_output("../configure --python=python2 --enable-gtk --with-gtkabi=3.0 --enable-opengl --enable-linux-aio --enable-curses --enable-vnc --enable-xen --enable-system --enable-user --enable-kvm --enable-sdl --with-sdlabi=2.0 --enable-virglrenderer --extra-cflags=\"-I{0}\"".format(os.path.join(SCRIPT_DIR,"include","include")),shell=True,cwd=os.path.join(config['global']['base_path'],qemu_version,"build"))
     except Exception as e:
         print(e.output)
-        exit(0)
+        exit(1)
     
     # Run the make using as many cores as we can
     subprocess.check_output("make -j {0}".format(multiprocessing.cpu_count()),shell=True,cwd=os.path.join(config['global']['base_path'],qemu_version,"build"))
