@@ -60,6 +60,7 @@ The VNC View Type is actually the QEMU default. In this case, QEMU will start up
 # Installer Tested Against
 
 - Ubuntu 15.10
+- Kali Rolling Release (June 11 2016)
 
 # Common Problems
 
