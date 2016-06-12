@@ -194,6 +194,7 @@ def changeViewTypeMenu(env):
     options.append(menusystem.Choice(selector=2, value=json.dumps((env,"curses")), handler=changeViewType, description='Curses'))
     options.append(menusystem.Choice(selector=3, value=json.dumps((env,"vnc")), handler=changeViewType, description='VNC'))
     options.append(menusystem.Choice(selector=4, value=json.dumps((env,"gtk")), handler=changeViewType, description='GTK'))
+    options.append(menusystem.Choice(selector=4, value=json.dumps((env,"sdl")), handler=changeViewType, description='SDL'))
     options.append(menusystem.Choice(selector=0, value=0, handler=lambda _: False, description='Back'))
 
     

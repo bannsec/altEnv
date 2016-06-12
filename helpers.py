@@ -12,6 +12,7 @@ def getVMVariables(input_recommend=None):
 
     print("\nInput type defines how you will interact with this VM. The following options are supported by this script:")
     print("\tgtk - This will pop up a window locally on your machine to view this VM. This is likely what you want.")
+    print("\tsdl - Similar to gtk. By default I add gl support to this options")
     print("\tconsole - This means no graphics support at all. We will attempt to show VM as a console inline")
     print("\tcurses - Use the curses library to translate a virtual display. Again, this will be textual, but more graphical than console")
     print("\tvnc - This will start a VNC server that you can connect to to view the display.")
@@ -20,7 +21,7 @@ def getVMVariables(input_recommend=None):
         print("Recommend type \"{0}\"".format(input_recommend))
     
     input_type = ""
-    while input_type not in ['console','curses','vnc','gtk']:
+    while input_type not in ['console','curses','vnc','gtk','sdl']:
         input_type = input("Input Type: ").lower()
     
 
@@ -208,6 +209,10 @@ def writeVMConfig(env_path,tool,input_type,options):
         #vm_config['options']['vga'] = "vmware"
         vm_config['options']['display'] = "gtk"
         input_option = " -display gtk "
+    elif input_type == "sdl":
+        #vm_config['options']['vga'] = "vmware"
+        vm_config['options']['display'] = "sdl,gl=on"
+        input_option = " -display sdl,gl=on "
     else:
         raise Exception("Illegal Input Type option of \"{0}\"".format(input_type))
 
